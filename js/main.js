@@ -21,8 +21,10 @@ function Init() {
     console.log('Hi')
     console.log('MINE: ', MINE)
     var mineBoard = buildBoard(gLevel[0].SIZE)
+
+    console.log(mineBoard)
     renderBoard(mineBoard)
-    
+
 
 
 
@@ -31,7 +33,7 @@ function Init() {
 function buildBoard(size) {
 
     const board = []
-
+    var idx = getRandomInt(0, size)
     for (var i = 0; i < size; i++) {
         board.push([])
         for (var j = 0; j < size; j++) {
@@ -39,17 +41,18 @@ function buildBoard(size) {
             if ((i === 0 && j === 2) || (i === 2 && j === 3)) {
                 board[i][j].isMine = true
 
+
             }
 
         }
     }
     if (size === 5) {
 
-        board[4][4].char = MINE
+
         board[4][4].isMine = true
-        board[3][4].char = MINE
+
         board[3][4].isMine = true
-        board[4][0].char = MINE
+
         board[4][0].isMine = true
 
     }
@@ -75,10 +78,9 @@ function setMinesNegsCount(rowIdx, colIdx, board) {
     return neighborsCount
 }
 
-
 function renderBoard(board) {
-    var strHtml = '<table class="mineBoard"><tbody class="">'
 
+    var strHtml = '<table class="mineBoard"><tbody class="">'
     for (var i = 0; i < board.length; i++) {
         //var row = board[i]
         strHtml += '<tr>\n'
@@ -86,12 +88,14 @@ function renderBoard(board) {
 
             if (!board[i][j].isMine) {
                 var value = setMinesNegsCount(i, j, board)
+                console.log('value: ', value)
                 board[i][j] = value
+
             }
             else {
                 board[i][j] = MINE
-            }
 
+            }
             // if((i===0 && j===2) || (i===2 &&j===3)){
             //     board[i][j]=MINE
             // }
@@ -111,8 +115,13 @@ function renderBoard(board) {
 }
 
 function onCellClicked(elCell) {
-    var elSpan=elCell.querySelector('span')
-    elSpan.style.display='block'
+    var elGameOv = document.querySelector('gameOver')
+    var elSpan = elCell.querySelector('span')
+    if (elCell.isMine)
+        elGameOv.style.display = 'block'
+
+    elSpan.style.display = 'block'
+
 
 
 
@@ -120,6 +129,12 @@ function onCellClicked(elCell) {
 }
 
 function getCellCoord(strCellId) {
+    var coord = {}
+    var parts = strCellId.split('-')
+
+    coord.i = +parts[1]
+    coord.j = +parts[2]
+    return coord;
 
 
 }
@@ -131,9 +146,35 @@ function getCellCoord(strCellId) {
 
 // }
 
-// function expandShown(board, elCell, i, j) {
+function expandShown(board, elCell, i, j) {
+    var x = setMinesNegsCount(i, j, board)
+    for (var i = i; i < x; i++) {
+        var elSpan = elCell.querySelector('span')
+        elSpan.style.display = 'block'
 
-// }
+    }
+
+    // setMinesNegsCount(i,j,board)
+
+
+}
+function createBoardRandomWay(size) {
+    const board = []
+
+    var idxI = getRandomInt(0, size)
+    var idxJ = getRandomInt(0, size)
+    for (var i = 0; i < size; i++) {
+        board.push([])
+        for (var j = 0; j < size; j++) {
+            board[i][j] = { gCell }
+            if ((i === 0 && j === 2) || (i === 2 && j === 3)) {
+                board[idxI][idxJ].isMine = true
+
+            }
+
+        }
+    }
+}
 
 
 //const board = document.getElementById("board");
