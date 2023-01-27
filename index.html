@@ -8,8 +8,17 @@
     <title>Document</title>
 </head>
 <body onload="Init()">
+    <button onclick="Restart()" class="resetGame">🙂</button>
+    <h1>Lives remaning: ❤️❤️</h1>
+    <tr><td><button onclick="Restart()" class="Level level1">Easy</button></td>
+        <td><button onclick="changeLevel(8)" class="Level level2">Medium</button></td>
+        <td><button onclick="changeLevel(12)"class="Level level3">Hard</button></td>
+
+    </tr>
+    <div>
+        <h3>0.000</h3>
+    </div>
     <div class="game-board">
-        
 
     </div>
     <div class="gameOver">Game Over!</div>

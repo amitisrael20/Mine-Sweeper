@@ -1,7 +1,8 @@
 body {
-    background-color: rgba(173, 90, 173, 0.712);
+    background-color: rgba(12, 65, 139, 0.612);
     text-align: center;
 }
+
 /* .center {
     margin-left: auto;
     margin-right: auto;
@@ -16,22 +17,29 @@ td {
     border: 2px solid black;
     
 } */
+h1{
+    background-color: dodgerblue;
+    width: 373px;
+    margin-bottom: 15px;
+    margin-inline: auto;
+    font-size: x-large;
+}
 
 .game-board {
     height: 300px;
     width: 300px;
-    margin-left: 450px;
+    margin-left: 470px;
     margin: top 60px;
-    
-    
+
+
 }
 
 .mineBoard {
     border-collapse: collapse;
     height: 300px;
     width: 300px;
-  }
-  
+}
+
 .mineBoard td {
     background-color: gray;
     cursor: pointer;
@@ -39,33 +47,65 @@ td {
     height: 20px;
     border: 2px solid black;
     text-align: center;
-    
+
 }
 
-.Clicked{
+.Clicked {
     background-color: chocolate;
 }
-span{
+
+span {
     color: red;
     display: none;
-    
+
 }
-footer{
+.timer{
+    display: block;
+}
+
+footer {
     margin-top: 165px;
     font-size: xx-large;
     font-family: cursive;
     background-color: aliceblue;
 }
-footer :hover{
+
+footer :hover {
     background-color: darkred;
 }
-.gameOver{
+
+.gameOver {
     font-family: fantasy;
     background-color: antiquewhite;
     font-size: x-large;
     display: none;
+    
+}
+button{
+    height: 25px;
+    width: 47px;
+    background-color: bisque;
+    border: double 2px darkslateblue;
+    margin-right: 60px;
+    margin-bottom: inherit;
 }
 
+.Level{
+    height: 25px;
+    width: 60px;
+    background-color: bisque;
+    border: double 2px darkslateblue;
+    margin-right: 15px;
+    margin-bottom: inherit;
+}
 
+.level1{
+    background-color: greenyellow;
+}
 
-
+.level2{
+    background-color: yellow;
+}
+.level3{
+    background-color: red;
+}

@@ -3,7 +3,7 @@ const MINE = `💥`
 var gBoard = []
 var timerInterval
 var gCountCellClicked = 0
-const gGame = {
+const gGame = {                     //לא להתייחס, זה דף גיבוי למקרה שאני משנה את הקוד. הוא אפילו לא מחובר
     isOn: false,
     shownCount: 0,
     markedCount: 0,
