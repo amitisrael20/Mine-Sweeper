@@ -251,7 +251,7 @@ function expandShown(board, elCell, i, j) {
             if (i === row && j === col) continue
             if (col < 0 || col >= board[row].length) continue
             debugger;
-            if (board[row][col] !== MINE) {
+            if (board[row][col] !== MINE && !gBoard[row][col].isMine) {
                 var elColor = document.getElementById(`${row}-${col}`)
                 elColor.style.backgroundColor = 'green'
                 var elSpan = elCell.querySelector('span')
