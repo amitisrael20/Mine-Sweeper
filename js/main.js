@@ -1,5 +1,6 @@
 'use strict'
 const MINE = `💥`
+const FLAG = '🚩'
 var gBoard = []
 var timerInterval
 var gCountCellClicked = 0
@@ -50,7 +51,7 @@ function buildBoard(size) {
     }
     if (size === 8) {
 
-            //0,2      2,3     4,4    3,4      4,0
+        //0,2      2,3     4,4    3,4      4,0
         board[6][6].isMine = true
         board[6][0].isMine = true
         board[2][5].isMine = true
@@ -63,7 +64,35 @@ function buildBoard(size) {
         board[7][6].isMine = true
         board[7][5].isMine = true
         board[5][7].isMine = true
-        
+
+    }
+    if (size === 12) {
+
+        //0,2      2,3     4,4    3,4      4,0
+        board[6][6].isMine = true
+        board[6][0].isMine = true
+        board[2][5].isMine = true
+        board[4][4].isMine = true
+        board[3][4].isMine = true
+        board[4][0].isMine = true
+        board[1][7].isMine = true
+        board[1][1].isMine = true
+        board[5][3].isMine = true
+        board[7][6].isMine = true
+        board[7][5].isMine = true
+        board[5][7].isMine = true
+        board[7][10].isMine = true
+        board[11][8].isMine = true
+        board[6][9].isMine = true
+        board[3][8].isMine = true
+        board[9][11].isMine = true
+        board[7][1].isMine = true
+        board[9][9].isMine = true
+        board[2][10].isMine = true
+        board[9][4].isMine = true
+        board[3][10].isMine = true
+        board[10][8].isMine = true
+        board[11][0].isMine = true
 
     }
     gGame.isOn = true;
@@ -91,11 +120,11 @@ function setMinesNegsCount(rowIdx, colIdx, board) {
 }
 
 function renderBoard(board) {
-    var idx=0
-    for(var x=0;x<gLevel.length;x++){
-        if(board.length===gLevel[x].SIZE)
-        idx=gLevel[x].MINES
-        
+    var idx = 0
+    for (var x = 0; x < gLevel.length; x++) {
+        if (board.length === gLevel[x].SIZE)
+            idx = gLevel[x].MINES
+
     }
     var value = null
     var strHtml = '<table class="mineBoard"><tbody class="">'
@@ -116,7 +145,7 @@ function renderBoard(board) {
 
             }
 
-            strHtml += `\t<td id="${i}-${j}" data-size="${board.length**2}" data-level="${idx}" class="cell", "hide", onclick="onCellClicked(this)"><span>${value}</span></td>\n`
+            strHtml += `\t<td id="${i}-${j}" data-size="${board.length ** 2}" data-level="${idx}" class="cell", "hide", onclick="onCellClicked(this)"><span>${value}</span></td>\n`
         }
         strHtml += '</tr>\n'
     }
@@ -126,7 +155,7 @@ function renderBoard(board) {
     elMat.innerHTML = strHtml
 }
 
-function onCellClicked(elCell, gBoard) {
+function onCellClicked(elCell) {
 
     gCountCellClicked++
     debugger;
@@ -136,21 +165,28 @@ function onCellClicked(elCell, gBoard) {
     //     if(gLevel[i].SIZE===gBoard.length){
     //         gLives=gLevel[i].MINES
     //     }
-
     // }
     var strHTML = '<h1>Lives remaning:'
-    var splitIdArr = []
-    splitIdArr.push(elCell.id.split('-'))
-    var num = splitIdArr[0]
+    var Id = elCell.id
+    var num = Id.split('-')
+    num[0] = +num[0]
+    num[1] = +num[1]
+
+
     console.log('num: ', num)
-    if (gGame.isOn) {
+    if (gGame.isOn) {     //במידה והמשחק עדיין פועל
         var elLives = document.querySelector('h1')
         var elGameOv = document.querySelector('.gameOver')
         var elColor = document.getElementById(`${num[0]}-${num[1]}`)
         var elSpan = elCell.querySelector('span')
+        // if(onHandleKey){
+        //     elSpan.innerText=FLAG
+        // }
 
-        if (elCell.textContent === MINE) {
+
+        if (elCell.textContent === MINE) {     //במידה ולחצתי על מוקש בודק אם נשארו חיים ופועל בהתאם
             gLives--
+            gCountCellClicked--
             if (gLives > 0) {
                 elSpan.style.display = 'block'
                 elColor.style.backgroundColor = 'darkred'
@@ -178,24 +214,25 @@ function onCellClicked(elCell, gBoard) {
 
         }
 
-        else {
-            
-            var numVictory= elCell.getAttribute('data-size')
-            var numMines= elCell.getAttribute('data-level')
+        else {                                          //במידהולא לחצתי על מוקש
+
+            var numVictory = elCell.getAttribute('data-size')
+            var numMines = elCell.getAttribute('data-level')
             expandShown(gBoard, elCell, num[0], num[1])
             elSpan.style.display = 'block'
             elColor.style.backgroundColor = 'green'
-            if(gCountCellClicked===(numVictory- numMines)){
-                elGameOv.innerText='Victory!!'
+
+            if (gCountCellClicked === (numVictory - numMines)) {
+                elGameOv.innerText = 'Victory!!'
                 elGameOv.style.display = 'block'
                 clearInterval(timerInterval)
 
             }
-            
+
             // setMinesNegsCount(gBoard,elCell,num[i],num[j])
             //TODO - SHOW RESTART BUTTON
         }
-        //onCellMarked(elCell)
+
     }
 }
 
@@ -204,31 +241,36 @@ function expandShown(board, elCell, i, j) {
     // arr.push(elCell.id.split('-'))
     // var num = arr[0]
 
-    for (var row = i - 1; i < row + 1; row++) {
+
+    debugger;
+    for (var row = i - 1; row < i + 1; row++) {
+
         if (row < 0 || row >= board.length) continue
 
         for (var col = j - 1; col < j + 1; col++) {
             if (i === row && j === col) continue
             if (col < 0 || col >= board[row].length) continue
-            var elColor = document.getElementById(`${row}-${col}`)
             debugger;
-            if (!board[row][col].isMine) {
-                var elSpan = elCell.querySelector('span')
+            if (board[row][col] !== MINE) {
+                var elColor = document.getElementById(`${row}-${col}`)
                 elColor.style.backgroundColor = 'green'
+                var elSpan = elCell.querySelector('span')
                 elSpan.style.display = 'block'
             }
 
         }
     }
+    // for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
+    //     if (i < 0 || i >= board.length) continue
 
-
-    // var x = setMinesNegsCount(i, j, board)
-    // for (var i = i; i < x; i++) {
-    //     var elSpan = elCell.querySelector('span')
-    //     elSpan.style.display = 'block'
-
+    //     for (var j = colIdx - 1; j <= colIdx + 1; j++) {
+    //         if (i === rowIdx && j === colIdx) continue
+    //         if (j < 0 || j >= board[i].length) continue
+    //         if (board[i][j].isMine) neighborsCount++
+    //     }
     // }
-    // setMinesNegsCount(i,j,board)
+
+
 
 
 }
@@ -274,10 +316,10 @@ function changeLevel(size) {
     for (var i = 0; i < gLevel.length; i++) {
         if (gLevel[i].SIZE === size) {
             num = gLevel[i].SIZE
-            if(num===8)
-            gLives = 4
-            else{
-                gLives=10
+            if (num === 8)
+                gLives = 4
+            else {
+                gLives = 10
             }
         }
         // gLives = 2
@@ -303,16 +345,19 @@ function changeLevel(size) {
     renderBoard(gBoard)
 }
 
-
-
-
-
 function onCellMarked(elCell) {
-    var splitIdArr = []
-    splitIdArr.push(elCell.id.split('-'))
-    var num = splitIdArr[0]
-    gBoard[num[0]][num[1]].isMarked = true
+    // var splitIdArr = []
+    // splitIdArr.push(elCell.id.split('-'))
+    // var num = splitIdArr[0]
+    // gBoard[num[0]][num[1]].isMarked = true
 
+}
+
+function onHandleKey(ev) {
+    var key = ev.key
+    if (key === 'Right Click')
+        return true
+    else return false
 }
 
 // function checkGameOver() {
