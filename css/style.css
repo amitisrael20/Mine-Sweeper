@@ -28,10 +28,7 @@ h1{
 .game-board {
     height: 300px;
     width: 300px;
-    margin-left: 470px;
-    margin: top 60px;
-
-
+    margin: 20px auto;
 }
 
 .mineBoard {

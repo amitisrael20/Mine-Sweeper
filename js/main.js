@@ -27,78 +27,32 @@ function Init() {
     renderBoard(gBoard)
 
 }
-var helpBoard = buildBoard(gLevel[0].SIZE)
-//console.log('helpBoard: ',helpBoard)
-
-
-
 function buildBoard(size) {
+    var minesCount = 0
+    for (var x = 0; x < gLevel.length; x++) {
+        if (gLevel[x].SIZE === size) minesCount = gLevel[x].MINES
+    }
 
     var board = []
-    // var idx = getRandomInt(0, size)
     for (var i = 0; i < size; i++) {
         board.push([])
         for (var j = 0; j < size; j++) {
-            board[i][j] = { gCell }
-            if ((i === 0 && j === 2) || (i === 2 && j === 3)) {
-                board[i][j].isMine = true
-                // gBoard[i][j].isMine=true
-
-            }
-
+            board[i][j] = { minesAroundCount: 0, isShown: false, isMine: false, isMarked: false }
         }
-
     }
-    if (size === 8) {
 
-        //0,2      2,3     4,4    3,4      4,0
-        board[6][6].isMine = true
-        board[6][0].isMine = true
-        board[2][5].isMine = true
-        board[4][4].isMine = true
-        board[3][4].isMine = true
-        board[4][0].isMine = true
-        board[1][7].isMine = true
-        board[1][1].isMine = true
-        board[5][3].isMine = true
-        board[7][6].isMine = true
-        board[7][5].isMine = true
-        board[5][7].isMine = true
-
+    var placed = 0
+    while (placed < minesCount) {
+        var row = getRandomInt(0, size)
+        var col = getRandomInt(0, size)
+        if (!board[row][col].isMine) {
+            board[row][col].isMine = true
+            placed++
+        }
     }
-    if (size === 12) {
 
-        //0,2      2,3     4,4    3,4      4,0
-        board[6][6].isMine = true
-        board[6][0].isMine = true
-        board[2][5].isMine = true
-        board[4][4].isMine = true
-        board[3][4].isMine = true
-        board[4][0].isMine = true
-        board[1][7].isMine = true
-        board[1][1].isMine = true
-        board[5][3].isMine = true
-        board[7][6].isMine = true
-        board[7][5].isMine = true
-        board[5][7].isMine = true
-        board[7][10].isMine = true
-        board[11][8].isMine = true
-        board[6][9].isMine = true
-        board[3][8].isMine = true
-        board[9][11].isMine = true
-        board[7][1].isMine = true
-        board[9][9].isMine = true
-        board[2][10].isMine = true
-        board[9][4].isMine = true
-        board[3][10].isMine = true
-        board[10][8].isMine = true
-        board[11][0].isMine = true
-
-    }
-    gGame.isOn = true;
+    gGame.isOn = true
     return board
-    // return gBoard
-
 }
 
 
@@ -155,6 +109,7 @@ function renderBoard(board) {
 }
 
 function onCellClicked(elCell) {
+    if (elCell.style.backgroundColor === 'green' || elCell.style.backgroundColor === 'darkred') return
 
     gCountCellClicked++
     
@@ -220,8 +175,8 @@ function onCellClicked(elCell) {
             expandShown(gBoard, elCell, num[0], num[1])
             elSpan.style.display = 'block'
             elColor.style.backgroundColor = 'green'
-
-            if (gCountCellClicked === (numVictory - numMines)) {
+            gGame.shownCount++
+            if (gGame.shownCount === (numVictory - numMines)) {
                 elGameOv.innerText = 'Victory!!'
                 elGameOv.style.display = 'block'
                 clearInterval(timerInterval)
@@ -250,9 +205,9 @@ function expandShown(board, elCell, i, j) {
             
             if (board[row][col] !== MINE && !gBoard[row][col].isMine) {
                 var elColor = document.getElementById(`${row}-${col}`)
+                if (elColor.style.backgroundColor === 'green') continue
                 elColor.style.backgroundColor = 'green'
-                var elSpan = elCell.querySelector('span')
-                elSpan.style.display = 'block'
+                gGame.shownCount++
             }
 
         }
@@ -273,6 +228,7 @@ function expandShown(board, elCell, i, j) {
 }
 
 function Restart() {
+    gGame.shownCount = 0
     gLives = 2
     gCountCellClicked = 0
     var elSmile = document.querySelector('.resetGame')
@@ -308,6 +264,7 @@ function timer() {
 }
 
 function changeLevel(size) {
+    gGame.shownCount = 0
     var num
     gCountCellClicked = 0
     for (var i = 0; i < gLevel.length; i++) {
