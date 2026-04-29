@@ -135,7 +135,6 @@ function renderBoard(board) {
 
             if (!board[i][j].isMine) {
                 value = setMinesNegsCount(i, j, board)
-                gBoard[i][j] = value   //---------
                 console.log('value: ', value)
                 //board[i][j] = value
 
@@ -158,7 +157,7 @@ function renderBoard(board) {
 function onCellClicked(elCell) {
 
     gCountCellClicked++
-    debugger;
+    
     if (gCountCellClicked === 1) timer()
 
     // for(var i=0;i<gBoard[i].length;i++){
@@ -242,15 +241,13 @@ function expandShown(board, elCell, i, j) {
     // var num = arr[0]
 
 
-    debugger;
-    for (var row = i - 1; row < i + 1; row++) {
-
+    
+    for (var row = i - 1; row <= i + 1; row++) {
         if (row < 0 || row >= board.length) continue
-
-        for (var col = j - 1; col < j + 1; col++) {
+        for (var col = j - 1; col <= j + 1; col++) {
             if (i === row && j === col) continue
             if (col < 0 || col >= board[row].length) continue
-            debugger;
+            
             if (board[row][col] !== MINE && !gBoard[row][col].isMine) {
                 var elColor = document.getElementById(`${row}-${col}`)
                 elColor.style.backgroundColor = 'green'
@@ -293,7 +290,7 @@ function Restart() {
     strHTML += '</h1'
     elLives.innerHTML = strHTML
     clearInterval(timerInterval)
-    var gBoard = buildBoard(gLevel[0].SIZE)
+    gBoard = buildBoard(gLevel[0].SIZE)
     console.log('mineBoard: ', gBoard)
     renderBoard(gBoard)
 
