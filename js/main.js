@@ -19,6 +19,7 @@ const gCell = {
 }
 var gLevel = [{ SIZE: 4, MINES: 2 }, { SIZE: 8, MINES: 14 }, { SIZE: 12, MINES: 32 }]
 var gLives = 2
+var gHoveredCell = null
 function Init() {
     console.log('Hi')
     console.log('MINE: ', MINE)
@@ -98,7 +99,7 @@ function renderBoard(board) {
 
             }
 
-            strHtml += `\t<td id="${i}-${j}" data-size="${board.length ** 2}" data-level="${idx}" class="cell", "hide", onclick="onCellClicked(this)"><span>${value}</span></td>\n`
+            strHtml += `\t<td id="${i}-${j}" data-size="${board.length ** 2}" data-level="${idx}" class="cell" onmouseover="onCellHover(this)" onclick="onCellClicked(this)" oncontextmenu="onCellMarked(this); return false"><span>${value}</span></td>\n`
         }
         strHtml += '</tr>\n'
     }
@@ -109,7 +110,7 @@ function renderBoard(board) {
 }
 
 function onCellClicked(elCell) {
-    if (elCell.style.backgroundColor === 'green' || elCell.style.backgroundColor === 'darkred') return
+    if (elCell.style.backgroundColor === 'green' || elCell.style.backgroundColor === 'darkred' || elCell.style.backgroundColor === 'yellow') return
 
     gCountCellClicked++
     
@@ -222,10 +223,14 @@ function expandShown(board, elCell, i, j) {
     //     }
     // }
 
-
-
-
 }
+
+function onCellHover(elCell) {
+    gHoverCell = elCell
+}
+
+
+
 
 function Restart() {
     gGame.shownCount = 0
@@ -308,11 +313,11 @@ function onCellMarked(elCell) {
 }
 
 function onHandleKey(ev) {
-    var key = ev.key
-    if (key === 'Right Click')
-        return true
-    else return false
+    if ((ev.key === 'x' || ev.key === 'X') && gHoveredCell) {
+        onCellMarked(gHoveredCell)
+    }
 }
+
 
 // function checkGameOver() {
 
@@ -340,7 +345,30 @@ function onHandleKey(ev) {
 
 //const board = document.getElementById("board");
 
-// Create the board
+function onCellMarked(elCell) {
+    if (!gGame.isOn)
+         return
+
+    if (elCell.style.backgroundColor === 'green' || elCell.style.backgroundColor === 'darkred') 
+        return
+
+    var num = elCell.id.split('-')
+    var elSpan = elCell.querySelector('span')
+
+    if (!gBoard[num[0]][num[1]].isMarked) {
+        gBoard[num[0]][num[1]].isMarked = true
+        elCell.dataset.original = elSpan.innerText
+        elSpan.innerText = 'X'
+        elSpan.style.display = 'block'
+        elCell.style.backgroundColor = 'yellow'
+    } else {
+        gBoard[num[0]][num[1]].isMarked = false
+        elSpan.innerText = elCell.dataset.original
+        elSpan.style.display = 'none'
+        elCell.style.backgroundColor = ''
+    }
+}
+
 
 
 // Add mines to random squares
