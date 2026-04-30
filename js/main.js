@@ -258,6 +258,7 @@ function Restart() {
 }
 
 function timer() {
+    clearInterval(timerInterval)
     var startTime = Date.now()
 
     timerInterval = setInterval(() => {
